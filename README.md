@@ -3,7 +3,9 @@ node-spotify-webhelper
 
 ###MODIFICATION:
 
+```
 Used cachedRequest to avoid invalid oauth token error. (especially for those who use the script with tmux status)
+```
 
 Node.js interface for the Spotify WebHelper API, based on this great article: http://cgbystrom.com/articles/deconstructing-spotifys-builtin-http-server/
 
