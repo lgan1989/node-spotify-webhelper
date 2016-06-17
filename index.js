@@ -2,10 +2,14 @@
 // http://cgbystrom.com/articles/deconstructing-spotifys-builtin-http-server/
 
 var request = require('request')
+var cachedRequest = require('cached-request')(request);
+var cacheDirectory = "/tmp/cache";
 var qs = require('querystring')
 var util = require('util');
 var path = require('path');
 var child_process = require('child_process');
+
+cachedRequest.setCacheDirectory(cacheDirectory);
 
 // global variables, used when running on windows
 var wintools;
@@ -33,10 +37,14 @@ function getJson(url, params, headers, cb) {
     cb = cb || function () { };
     if (params)
         url += '?' + qs.stringify(params)
-    
+
     // rejectUnauthorized:false should be ok here since we are working with localhost
     // this fixes the UNABLE_TO_VERIFY_LEAF_SIGNATURE error
-    request({ 'url': url, 'headers': headers, 'rejectUnauthorized' : false}, function (err, req, body) {
+    var makeRequest = request;
+    if (url.indexOf('spotify.com') !== -1) {
+        makeRequest = cachedRequest;
+    }
+    makeRequest({ 'url': url, 'ttl': 8000, 'headers': headers, 'rejectUnauthorized' : false}, function (err, req, body) {
         if (err) {
             return cb(err);
         }
@@ -57,7 +65,7 @@ var ASCII_LOWER_CASE = "abcdefghijklmnopqrstuvwxyz";
 // http://stackoverflow.com/questions/1349404/generate-a-string-of-5-random-characters-in-javascript
 function generateRandomString(length) {
     var text = "";
-    
+
     for( var i=0; i < 10; i++ )
         text += ASCII_LOWER_CASE.charAt(Math.floor(Math.random() * ASCII_LOWER_CASE.length));
 
@@ -180,7 +188,7 @@ function SpotifyWebHelper(opts) {
         if (self.isInitialized) {
             return cb();
         }
-        
+
         launchSpotifyWebhelperIfNeeded(function (err, res) {
           if (err) {
             return cb(err);

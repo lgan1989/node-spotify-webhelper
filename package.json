@@ -4,10 +4,12 @@
   "description": "Node.js interface for the local Spotify WebHelper API",
   "main": "index.js",
   "dependencies": {
-    "wintools" : ">=0.1.0",
-    "request" : ">=2.36.0"
+    "wintools": ">=0.1.0",
+    "request": ">=2.36.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "cached-request": "^1.0.0"
+  },
   "keywords": [
     "spotify",
     "spotifywebhelper",
