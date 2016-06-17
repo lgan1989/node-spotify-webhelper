@@ -1,6 +1,10 @@
 node-spotify-webhelper
 ======================
 
+###MODIFICATION:
+
+Used cachedRequest to avoid invalid oauth token error. (especially for those who use the script with tmux status)
+
 Node.js interface for the Spotify WebHelper API, based on this great article: http://cgbystrom.com/articles/deconstructing-spotifys-builtin-http-server/
 
 The API interacts with the SpotifyWebHelper process via HTTP. For windows, the module checks whether SpotifyWebHelper.exe is running, and try to run it if not.
@@ -13,7 +17,7 @@ This module exposes the SpotifyWebHelper object, which exposes  the following me
  - **pause (cb : function(err, res))** - pause currently playing song
  - **unpause (cb : function(err, res))** - unpause currently playing song
  - **play (spotifyurl : string, cb : function(err, res))** - play the given spotify url
- - **Constructor (port : number (optional))** - Creates a new SpotifyWebHelper object, 
+ - **Constructor (port : number (optional))** - Creates a new SpotifyWebHelper object,
    default port to communicate with the SpotifyWebHelper is 4370, other port can be specified when creating the object.
 
 Example:
@@ -27,8 +31,8 @@ spotify.getStatus(function (err, res) {
     return console.error(err);
   }
 
-  console.info('currently playing:', 
-    res.track.artist_resource.name, '-',  
+  console.info('currently playing:',
+    res.track.artist_resource.name, '-',
     res.track.track_resource.name);
 });
 ```
